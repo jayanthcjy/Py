@@ -1,0 +1,7 @@
+[
+    {
+        "context": "Information about your company",
+        "question": "Relevant company-specific question",
+        "answers": {"text": ["Correct answer"], "answer_start": [position in context]}
+    }
+]

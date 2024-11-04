@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Input with Dropdown</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 350px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .dropdown-icon {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+        }
+
+        select {
+            display: none; /* Hide by default */
+            position: absolute;
+            top: 42px; /* Position below input field */
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .dropdown-visible {
+            display: block; /* Show dropdown */
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form id="customForm">
+            <label for="textInput">Choose or enter a custom value:</label>
+            <div class="input-container">
+                <input type="text" id="textInput" name="textInput" placeholder="Select or type here...">
+                <span class="dropdown-icon" id="dropdownIcon">&#9660;</span> <!-- Dropdown icon -->
+                <select id="dropdownSelect">
+                    <option value="" disabled selected>-- Select from the list --</option>
+                    <option value="Option 1">Option 1</option>
+                    <option value="Option 2">Option 2</option>
+                </select>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const dropdownSelect = document.getElementById('dropdownSelect');
+        const dropdownIcon = document.getElementById('dropdownIcon');
+        const form = document.getElementById('customForm');
+        const result = document.getElementById('result');
+
+        // Show dropdown when the dropdown icon is clicked
+        dropdownIcon.addEventListener('click', function () {
+            dropdownSelect.classList.toggle('dropdown-visible'); // Toggle visibility
+        });
+
+        // Sync input value with dropdown selection
+        dropdownSelect.addEventListener('change', function () {
+            textInput.value = dropdownSelect.value;
+            dropdownSelect.classList.remove('dropdown-visible'); // Hide dropdown after selection
+        });
+
+        // Hide dropdown when clicking outside
+        window.addEventListener('click', function (event) {
+            if (!dropdownSelect.contains(event.target) && event.target !== textInput && event.target !== dropdownIcon) {
+                dropdownSelect.classList.remove('dropdown-visible');
+            }
+        });
+
+        // Prevent form submission and show result
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevents the form from submitting
+            result.textContent = "You entered: " + textInput.value;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chatbox { max-width: 500px; margin: auto; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .message { margin: 5px 0; }
+        .user { text-align: right; color: blue; }
+        .bot { text-align: left; color: green; }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="chatlog"></div>
+        <input type="text" id="question" placeholder="Ask something..." onkeydown="if (event.key === 'Enter') sendMessage()">
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const question = document.getElementById("question").value;
+            document.getElementById("chatlog").innerHTML += `<div class="message user">${question}</div>`;
+            document.getElementById("question").value = "";
+
+            const response = await fetch("https://your-flask-app-url/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question })
+            });
+            const data = await response.json();
+            document.getElementById("chatlog").innerHTML += `<div class="message bot">${data.answer}</div>`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+$(document).ready(function() {
+    // HTML structure for dynamic form
+    let dynamicFormHTML = `
+        <form id="dynamicForm">
+            <div id="inputContainer">
+                <div class="field-group">
+                    <select name="attribute[]" id="attributeSelect" onchange="checkCustomInput(this)">
+                         <option value="">Select an attribute</option>
+                         <option value="Pest Name">Pest Name</option>
+                         <option value="Zone">Zone</option>
+                          <option value="Other">Other</option>
+                    </select>
+                    <input type="text" id="customAttribute" name="customAttribute" placeholder="Enter custom attribute" style="display:none;" />
+                    <select name="operator[]">
+                        <option value="=">=</option>
+                        <option value="!=">!=</option>
+                    </select>
+                    <input type="text" name="value[]" placeholder="Value" required>
+                    <button type="button" class="remove-btn">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="addBtn">Add</button>
+            <button type="button" id="submit">Submit</button>
+        </form>
+    `;
+        function checkCustomInput(selectElement) {
+        var customInput = document.getElementById('customAttribute');
+        if (selectElement.value === 'Other') {
+            customInput.style.display = 'block';
+        } else {
+            customInput.style.display = 'none';
+        }
+    }
+ 
+    // Append dynamic form after the input field with ID 'cr1a7_genericrule'
+    $('#cr1a7_genericrule').after(dynamicFormHTML);
+ 
+    // Add button to replicate the input fields
+    $(document).on('click', '#addBtn', function() {
+        // Clone the first field-group, append it to inputContainer, and clear input values
+        let newFieldGroup = $('.field-group:first').clone();
+        newFieldGroup.find('input').val('');  // Clear the input values
+        newFieldGroup.appendTo('#inputContainer');
+    });
+ 
+    // Delegate the remove button to remove the respective field-group
+    $(document).on('click', '.remove-btn', function() {
+        $(this).parent('.field-group').remove();
+    });
+ 
+    // On form submission, concatenate the conditions and set the hidden input
+    $(document).on('click', '#submit', function() {
+        let concatenatedAttributes = '';
+        let index = 0;  // Index for adding 'AND' between conditions
+        
+        // Loop through each field group to collect data and concatenate
+        $('div.field-group').each(function() {
+            let attribute = $(this).find('input[name="attribute[]"]').val();
+            let operator = $(this).find('select[name="operator[]"]').val();
+            let value = $(this).find('input[name="value[]"]').val();
+ 
+            if (index > 0) {
+                concatenatedAttributes += ' AND ';
+            }
+            concatenatedAttributes += attribute + ' ' + operator + ' ' + value;
+            index++;  // Increment index to add 'AND' after the first item
+        });
+ 
+        // Set the concatenated attributes to the hidden input field for Power Pages
+        $('#cr1a7_filtercondition').val(concatenatedAttributes);
+ 
+        // Let the form submit normally (handled by Power Pages)
+    });
+});

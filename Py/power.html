@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Input Form with Dropdown</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 350px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .dropdown-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="gray" d="M7 10l5 5 5-5z"/></svg>') no-repeat center;
+            background-size: 100%;
+            cursor: pointer;
+        }
+
+        /* Dropdown menu styling */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            width: 100%;
+            z-index: 1;
+            max-height: 100px;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            top: 40px; /* Positioning it below the input field */
+        }
+
+        .dropdown-content div {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dropdown-content div:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form id="customForm">
+            <label for="textInput">Choose or enter a custom value:</label>
+            <!-- Input container holding both the text field and dropdown button -->
+            <div class="input-container">
+                <input type="text" id="textInput" name="textInput" placeholder="Select or type here...">
+                <button type="button" class="dropdown-button" id="dropdownIcon"></button>
+            </div>
+            
+            <!-- Dropdown content that shows options -->
+            <div class="dropdown-content" id="dropdownContent">
+                <div data-value="Option 1">Option 1</div>
+                <div data-value="Option 2">Option 2</div>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const dropdownIcon = document.getElementById('dropdownIcon');
+        const dropdownContent = document.getElementById('dropdownContent');
+        const result = document.getElementById('result');
+
+        // Show or hide dropdown when the dropdown icon is clicked
+        dropdownIcon.addEventListener('click', function (event) {
+            // Prevent form submission if inside the button
+            event.preventDefault();
+            
+            // Toggle dropdown visibility
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Sync dropdown content value with text input when clicked
+        dropdownContent.addEventListener('click', function (event) {
+            if (event.target && event.target.matches("div[data-value]")) {
+                textInput.value = event.target.getAttribute('data-value');
+                dropdownContent.style.display = 'none'; // Hide dropdown after selection
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('customForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form from submitting
+            result.textContent = "You entered: " + textInput.value;
+        });
+
+        // Hide dropdown when clicking outside of it
+        window.addEventListener('click', function (event) {
+            if (!dropdownContent.contains(event.target) && event.target !== dropdownIcon && event.target !== textInput) {
+                dropdownContent.style.display = 'none';
+            }
+        });
+
+        // Optional: Reset dropdown value when text field is cleared
+        textInput.addEventListener('input', function () {
+            if (textInput.value === '') {
+                dropdownContent.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
